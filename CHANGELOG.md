@@ -1,5 +1,38 @@
 # That's So Budget — Changelog
 
+## v1.4.0 — March 12, 2026
+**Deployment Migration**
+- Migrated hosting from Netlify to Vercel with auto-deploy from GitHub
+- Moved Firebase config to environment variables for security
+- Added Firebase as explicit package.json dependency
+- Created GitHub repo at utahrexalldrug-hash/thats-so-budget
+
+**Deploy:** Vercel (auto-deploy from GitHub)
+
+---
+
+## v1.3.0 — March 10, 2026
+**New Features**
+- Split expenses: split a single receipt across multiple budget categories with receipt grouping
+- Receipt group display in Activity tab — expandable grouped items showing store name, total, and per-category breakdown
+- Search by amount in Activity tab (supports $, commas, partial matches)
+- Search by date in Activity tab (short date, long date, numeric, ISO formats)
+- Quick add floating action button on Activity page
+- Search results banner showing match count and running total
+
+**Bug Fixes**
+- Fixed bill form amount field losing focus after every keystroke (extracted BillFormFields as standalone component)
+- Fixed Bills tab showing "Feb 2026" instead of current month
+- Fixed monthKey mismatch: transactions entered in Feb with March dates now correctly assigned to March
+- Added fixMonthKeys() migration function to correct mismatched monthKeys on load
+- Fixed AddTransaction to derive monthKey from transaction date instead of currentMonth state
+- Fixed category percentage on Trends page — now shows % of budget used instead of % of total spending
+- Progress bar caps at 100% width and turns red when over budget
+
+**Deploy:** Netlify manual deploy
+
+---
+
 ## v1.2.0 — March 4, 2026
 **Bug Fixes**
 - Fixed date picker defaulting to tomorrow instead of today (UTC timezone bug) — affected both manual entry and receipt scanner

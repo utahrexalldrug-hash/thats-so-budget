@@ -1,16 +1,48 @@
-# React + Vite
+# That's So Budget
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Your household budget, simplified.
 
-Currently, two official plugins are available:
+A progressive web app for tracking expenses, income, bills, and budgets with envelope-style category management, receipt scanning, and real-time sync.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- Monthly dashboard with spending breakdown, pie charts, and income vs expenses
+- Envelope-style budget categories with progress tracking
+- Smart receipt scanner powered by Claude API (whole receipt or per-item split)
+- Split expenses across multiple categories with receipt grouping
+- Fixed bills & income tracker with recurring bills, due dates, and subscription tagging
+- Activity feed with search by name, amount, or date
+- Trends page with budget vs actual and payment method reconciliation
+- Debt snowball/avalanche tracker with payoff projections
+- Firebase Auth with Firestore real-time sync across devices
+- PWA — installable on iPhone and Android home screens
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- **Frontend:** React 19, Tailwind CSS 4, Framer Motion, Recharts
+- **Backend:** Firebase Auth + Firestore
+- **AI:** Claude API for receipt scanning
+- **Build:** Vite 7
+- **Hosting:** Vercel (auto-deploys from GitHub)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Getting Started
+
+```bash
+npm install
+npm run dev
+```
+
+Create a `.env` file with your Firebase config:
+
+```
+VITE_FIREBASE_API_KEY=your_key
+VITE_FIREBASE_AUTH_DOMAIN=your_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+## Deploy
+
+Push to `main` and Vercel auto-deploys. Environment variables are configured in the Vercel dashboard.
