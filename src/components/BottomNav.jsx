@@ -1,12 +1,12 @@
 import { NavLink } from 'react-router-dom'
-import { Home, Wallet, Receipt, Camera, TrendingUp } from 'lucide-react'
+import { Home, LayoutGrid, Camera, Receipt, List } from 'lucide-react'
 
 const tabs = [
   { to: '/', icon: Home, label: 'Home' },
-  { to: '/envelopes', icon: Wallet, label: 'Envelopes' },
+  { to: '/categories', icon: LayoutGrid, label: 'Categories' },
   { to: '/scan', icon: Camera, label: 'Scan' },
   { to: '/bills', icon: Receipt, label: 'Bills' },
-  { to: '/trends', icon: TrendingUp, label: 'Trends' },
+  { to: '/activity', icon: List, label: 'Activity' },
 ]
 
 export default function BottomNav() {

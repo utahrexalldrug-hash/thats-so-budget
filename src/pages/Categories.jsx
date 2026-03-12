@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useStore, useEnvelopeSpent, store } from '../lib/store'
 import { formatCurrency, getMonthName, CATEGORY_ICONS, PAYMENT_METHODS } from '../lib/utils'
-import EnvelopeCard from '../components/EnvelopeCard'
+import CategoryCard from '../components/CategoryCard'
 import Modal from '../components/Modal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Plus, ArrowLeft, Trash2, Pencil, Settings2 } from 'lucide-react'
@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 const ICON_OPTIONS = Object.entries(CATEGORY_ICONS).map(([key, emoji]) => ({ key, emoji }))
 const COLOR_OPTIONS = ['#0f7b6c', '#3b82f6', '#6366f1', '#8b5cf6', '#ec4899', '#e11d48', '#f97316', '#f59e0b', '#14b8a6', '#64748b', '#10b981', '#ef4444']
 
-export default function Envelopes() {
+export default function Categories() {
   const data = useStore()
   const navigate = useNavigate()
   const totalBudget = data.envelopes.reduce((s, e) => s + e.budget, 0)
@@ -28,7 +28,7 @@ export default function Envelopes() {
   return (
     <div className="min-h-screen pb-24 bg-surface">
       <div className="px-6 pt-14 pb-4">
-        <h1 className="text-2xl font-bold">Envelopes</h1>
+        <h1 className="text-2xl font-bold">Categories</h1>
         <p className="text-sm text-text-secondary mt-1">
           {getMonthName(data.currentMonth)} &middot; {formatCurrency(totalBudget)} budgeted
         </p>
@@ -42,7 +42,7 @@ export default function Envelopes() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.03 }}
           >
-            <EnvelopeCard envelope={env} onClick={() => navigate(`/envelopes/${env.id}`)} />
+            <CategoryCard envelope={env} onClick={() => navigate(`/categories/${env.id}`)} />
           </motion.div>
         ))}
       </div>
@@ -52,12 +52,12 @@ export default function Envelopes() {
           onClick={() => setShowAdd(true)}
           className="w-full py-3.5 rounded-2xl border-2 border-dashed border-border text-text-secondary font-medium text-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent transition-colors"
         >
-          <Plus size={18} /> Add Envelope
+          <Plus size={18} /> Add Category
         </button>
       </div>
 
-      {/* Add Envelope Modal */}
-      <Modal open={showAdd} onClose={() => setShowAdd(false)} title="Add Envelope">
+      {/* Add Category Modal */}
+      <Modal open={showAdd} onClose={() => setShowAdd(false)} title="Add Category">
         <form onSubmit={submitAdd} className="space-y-4">
           <div>
             <label className="text-sm font-medium text-text-secondary block mb-1.5">Name</label>
@@ -88,14 +88,14 @@ export default function Envelopes() {
               ))}
             </div>
           </div>
-          <button type="submit" className="w-full py-3.5 bg-accent text-white font-semibold rounded-xl active:bg-accent-dark transition-colors">Add Envelope</button>
+          <button type="submit" className="w-full py-3.5 bg-accent text-white font-semibold rounded-xl active:bg-accent-dark transition-colors">Add Category</button>
         </form>
       </Modal>
     </div>
   )
 }
 
-export function EnvelopeDetail() {
+export function CategoryDetail() {
   const { id } = useParams()
   const data = useStore()
   const navigate = useNavigate()
@@ -108,41 +108,41 @@ export function EnvelopeDetail() {
   const [expandedTx, setExpandedTx] = useState(null)
   const [editingTx, setEditingTx] = useState(null)
   const [editForm, setEditForm] = useState({})
-  const [showEditEnvelope, setShowEditEnvelope] = useState(false)
+  const [showEditCategory, setShowEditCategory] = useState(false)
   const [envForm, setEnvForm] = useState({})
   const [confirmDelete, setConfirmDelete] = useState(false)
 
-  if (!envelope) return <div className="pt-20 text-center text-text-secondary">Envelope not found</div>
+  if (!envelope) return <div className="pt-20 text-center text-text-secondary">Category not found</div>
 
   const remaining = envelope.budget - spent
   const pct = envelope.budget > 0 ? Math.min(spent / envelope.budget, 1) : 0
   const icon = CATEGORY_ICONS[envelope.icon] || '📁'
 
-  const startEditEnvelope = () => {
+  const startEditCategory = () => {
     setEnvForm({ name: envelope.name, budget: String(envelope.budget), icon: envelope.icon, color: envelope.color })
-    setShowEditEnvelope(true)
+    setShowEditCategory(true)
   }
 
-  const saveEnvelope = () => {
+  const saveCategory = () => {
     if (!envForm.name) return
     store.updateEnvelope(id, { name: envForm.name, budget: parseFloat(envForm.budget) || 0, icon: envForm.icon, color: envForm.color })
-    setShowEditEnvelope(false)
+    setShowEditCategory(false)
   }
 
-  const deleteEnvelope = () => {
+  const deleteCategory = () => {
     store.deleteEnvelope(id)
-    navigate('/envelopes')
+    navigate('/categories')
   }
 
   const startEdit = (tx) => {
-    setEditForm({ description: tx.description, amount: String(tx.amount), paymentMethod: tx.paymentMethod || 'scc', note: tx.note || '' })
+    setEditForm({ description: tx.description, amount: String(tx.amount), paymentMethod: tx.paymentMethod || 'scc', note: tx.note || '', envelopeId: tx.envelopeId || id })
     setEditingTx(tx.id)
     setExpandedTx(null)
   }
 
   const saveEdit = () => {
     if (!editForm.description || !editForm.amount) return
-    store.updateTransaction(editingTx, { description: editForm.description, amount: parseFloat(editForm.amount), paymentMethod: editForm.paymentMethod, note: editForm.note })
+    store.updateTransaction(editingTx, { description: editForm.description, amount: parseFloat(editForm.amount), paymentMethod: editForm.paymentMethod, note: editForm.note, envelopeId: editForm.envelopeId })
     setEditingTx(null)
   }
 
@@ -155,10 +155,10 @@ export function EnvelopeDetail() {
     <div className="min-h-screen pb-24 bg-surface">
       <div className="px-6 pt-14 pb-6">
         <div className="flex items-center justify-between mb-4">
-          <button onClick={() => navigate('/envelopes')} className="flex items-center gap-1 text-accent text-sm font-medium">
-            <ArrowLeft size={16} /> Envelopes
+          <button onClick={() => navigate('/categories')} className="flex items-center gap-1 text-accent text-sm font-medium">
+            <ArrowLeft size={16} /> Categories
           </button>
-          <button onClick={startEditEnvelope} className="flex items-center gap-1 text-text-secondary text-sm font-medium">
+          <button onClick={startEditCategory} className="flex items-center gap-1 text-text-secondary text-sm font-medium">
             <Settings2 size={14} /> Edit
           </button>
         </div>
@@ -263,6 +263,20 @@ export function EnvelopeDetail() {
             </div>
           </div>
           <div>
+            <label className="text-sm font-medium text-text-secondary block mb-2">Category</label>
+            <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+              {data.envelopes.map(env => {
+                const envIcon = CATEGORY_ICONS[env.icon] || '📁'
+                return (
+                  <button key={env.id} type="button" onClick={() => setEditForm(f => ({ ...f, envelopeId: env.id }))} className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 transition-all text-left ${editForm.envelopeId === env.id ? 'border-accent bg-accent-light' : 'border-border-light'}`}>
+                    <span className="text-sm">{envIcon}</span>
+                    <span className="text-xs font-medium truncate">{env.name}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <div>
             <label className="text-sm font-medium text-text-secondary block mb-2">Payment Method</label>
             <div className="flex gap-2">
               {PAYMENT_METHODS.map(pm => (
@@ -280,8 +294,8 @@ export function EnvelopeDetail() {
         </div>
       </Modal>
 
-      {/* Edit Envelope Modal */}
-      <Modal open={showEditEnvelope} onClose={() => { setShowEditEnvelope(false); setConfirmDelete(false) }} title="Edit Envelope">
+      {/* Edit Category Modal */}
+      <Modal open={showEditCategory} onClose={() => { setShowEditCategory(false); setConfirmDelete(false) }} title="Edit Category">
         <div className="space-y-4">
           <div>
             <label className="text-sm font-medium text-text-secondary block mb-1.5">Name</label>
@@ -312,19 +326,19 @@ export function EnvelopeDetail() {
               ))}
             </div>
           </div>
-          <button onClick={saveEnvelope} className="w-full py-3.5 bg-accent text-white font-semibold rounded-xl active:bg-accent-dark transition-colors">Save Changes</button>
+          <button onClick={saveCategory} className="w-full py-3.5 bg-accent text-white font-semibold rounded-xl active:bg-accent-dark transition-colors">Save Changes</button>
 
           <div className="pt-2 border-t border-border-light">
             {!confirmDelete ? (
               <button onClick={() => setConfirmDelete(true)} className="w-full py-3 text-sm font-medium text-danger flex items-center justify-center gap-1.5">
-                <Trash2 size={14} /> Delete Envelope
+                <Trash2 size={14} /> Delete Category
               </button>
             ) : (
               <div className="space-y-2">
-                <p className="text-sm text-center text-text-secondary">This will remove the envelope. Transactions won't be deleted.</p>
+                <p className="text-sm text-center text-text-secondary">This will remove the category. Transactions won't be deleted.</p>
                 <div className="flex gap-2">
                   <button onClick={() => setConfirmDelete(false)} className="flex-1 py-2.5 rounded-xl border border-border-light text-sm font-medium text-text-secondary">Cancel</button>
-                  <button onClick={deleteEnvelope} className="flex-1 py-2.5 rounded-xl bg-red-500 text-white text-sm font-medium active:bg-red-600">Delete</button>
+                  <button onClick={deleteCategory} className="flex-1 py-2.5 rounded-xl bg-red-500 text-white text-sm font-medium active:bg-red-600">Delete</button>
                 </div>
               </div>
             )}
