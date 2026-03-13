@@ -174,6 +174,12 @@ export default function Activity() {
     setExpandedTx(null)
   }
 
+  const deleteGroup = (groupId) => {
+    const groupItems = data.transactions.filter(t => t.receiptGroup === groupId)
+    groupItems.forEach(t => store.deleteTransaction(t.id))
+    setExpandedGroup(null)
+  }
+
   const dateRangeLabel = dateRange === 'month' ? getMonthName(data.currentMonth) : dateRange === '7days' ? 'Last 7 days' : dateRange === '30days' ? 'Last 30 days' : 'Custom range'
 
   return (
@@ -402,10 +408,20 @@ export default function Activity() {
                                     <span className="text-xs shrink-0">{subIcon}</span>
                                     <span className="text-xs text-text-secondary truncate">{env?.name || 'Unknown'}</span>
                                   </div>
-                                  <span className="text-xs font-semibold tabular-nums shrink-0">{formatCurrency(sub.amount)}</span>
+                                  <div className="flex items-center gap-2 shrink-0">
+                                    <span className="text-xs font-semibold tabular-nums">{formatCurrency(sub.amount)}</span>
+                                    <button onClick={() => deleteTx(sub.id)} className="p-1 rounded-lg text-text-tertiary active:text-danger transition-colors">
+                                      <Trash2 size={12} />
+                                    </button>
+                                  </div>
                                 </div>
                               )
                             })}
+                            <div className="pt-2 mt-1 border-t border-border-light">
+                              <button onClick={() => deleteGroup(item.id)} className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-50 text-xs font-medium text-danger active:bg-red-100 transition-colors">
+                                <Trash2 size={12} /> Delete entire receipt
+                              </button>
+                            </div>
                           </div>
                         </motion.div>
                       )}
