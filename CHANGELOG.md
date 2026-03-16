@@ -1,5 +1,15 @@
 # That's So Budget — Changelog
 
+## v1.4.1 — March 12, 2026
+**Bug Fixes**
+- Added delete buttons to split/receipt group transactions in Activity tab — individual line items and entire receipts can now be deleted
+- Each sub-item in an expanded receipt group now has a trash icon for single-item removal
+- "Delete entire receipt" button added at the bottom of expanded receipt groups
+
+**Deploy:** Vercel (auto-deploy from GitHub)
+
+---
+
 ## v1.4.0 — March 12, 2026
 **Deployment Migration**
 - Migrated hosting from Netlify to Vercel with auto-deploy from GitHub
